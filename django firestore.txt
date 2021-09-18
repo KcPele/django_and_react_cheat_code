@@ -1,0 +1,13 @@
+from google.oauth2 import service_account
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'django-file-upload-cc740.appspot.com'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    'project_key.json'
+
+)
+GS_FILE_OVERWRITE = False
+GS_DEFAULT_ACL = 'publicRead'
+GS_QUERYSTRING_AUTH = False

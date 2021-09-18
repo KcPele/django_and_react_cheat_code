@@ -1,0 +1,147 @@
+get started
+===================================
+create virtual environment
+
+python -m venv nameOfEvironment
+Then activate that environment
+
+venv\Scripts\activate
+Then install Django in that environment
+
+pip install django
+Then create django project named mysite
+
+django-admin startproject projectname(sitename)
+
+create app
+=======================
+python manage.py startapp nameOfApp
+
+server
+=====================
+       python manage.py runserver 
+to change server port
+=======================
+python manage.py runserver 8080 or any port
+          to broadcast on homenetwork
+==================
+python manage.py runserver 0:8080
+
+
+
+myapp url code
+======================
+create: urls.py
+import path: from django.urls import path
+              from . import views
+urlpatterns = [
+path("", views.index, name="index")
+]
+
+
+mysite url code
+============================
+we just add and import the include
+add this path('', include('myapp.urls'))
+
+views
+====================================
+from django.http import HttpResponse
+
+# Create your views here.
+def index(request):
+     for http
+      	return HttpResponse('html tags goes here')
+     for templates
+     	return render(request, 'index.html')
+    to access db : dbname.objects.all()
+
+templates
+=======================
+at the top of html file add 
+	{% load static %}  for static file to work
+create a folder for templates eg tamplates
+	open settings.py 
+		and add [BASE_DIR, 'folderNameOfThe Template'] in Tempates in DIRS 
+
+to get data from your html
+=================================
+request.GET['nameOfWhatItIsCalledInTheHtmlFile']
+
+
+post method for forms
+=========================================
+put this in the form {% csrf_token %}
+change the GET To request.POST['']
+
+static file
+===========================
+any external file u use in your template file is a static file
+eg css etc
+create a static folder just like templates
+in settings.py add:
+    	import os -this is at the top
+    	write this under the STATIC_URL: 
+             STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'),)]
+		the link is like this <link href="{% static 'style.css' % }
+
+models/database
+===============================
+create a class and its perimeter
+add myapp in settings
+run: python manage.py makemigration
+	python manage.py migrate
+
+create admin
+=========================
+
+
+to loop in html
+========================
+{% for feature in features %}
+content goes here
+{% endfor %}
+
+admin
+========================
+python manage.py createsuperuser
+
+in admin.py register your models
+ 	eg: admin.site.register(yourModelsHereWhich are the class inyour models)
+
+User
+================================
+under the register route
+   check if the request.method == 'POST'
+   from django.contrib.auth.models import User, auth
+   u also import redirect
+   from django.contrib import messages
+check if the anything eg email or username already exist:
+    User.objects.filter(anything=anything).exits()
+	 messages.info(request, 'Username already taken')
+                return redirect('register')
+once u are done checking
+ user = User.objects.create_superuser(username=username, email=email, password=password)
+user.save()
+then u redirect
+====to display error messeges
+	we loop in the page and pass it
+	{% for message in messages %}
+              <h5>{{message}}</h5>
+              {% endfor %}
+login
+===============================
+check if its a post first then
+ user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+
+to dispay the users name
+======================================
+ {% if user.is_authenticated %}
+          <h2>{{ user.username}}</h2>
+          {% else %}
+logout
+==================================
+auth.logout(request)
+then u redirect

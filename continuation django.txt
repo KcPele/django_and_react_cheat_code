@@ -1,0 +1,103 @@
+dynamic url
+==========================================
+  path('post/<str:pk>', views.post, name='post')
+pk is a variable and it can also be an int where it says str
+===then in views write the function
+		def post(request, pk):
+<a href="{% url 'post' post %}">
+
+
+Postgresql setup
+=======================================
+
+crispy for styling forms
+================
+pip install crispy-forms
+installed app: 'crispy_forms'
+in settings CRISPY_TEMPLATE_PACK = 'bootstrap4'
+in template to use at the top
+	{% load crispy_forms_tags %}
+
+
+Anothr login way
+==================================
+from django.contrib.auth import views as auth_views
+ path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+ path('logout/', auth_views.LogoutView.as_view(template_name='accounts/logout.html'), name='logout'),
+    this will be in the templates
+	form|crispy
+in settings
+	LOGIN_REDIRECT_URL = 'home'
+
+
+to cut words short in html
+================================
+|truncatewords:20
+
+
+to arrange 
+======================
+add revered to the for loop
+
+
+to creae signals for users to have default image
+==============================
+create signals.py
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User  
+from django.dispatch import receiver
+from .models import Profile
+
+@receiver(post_save, sender=User)
+def creat_profile(sender, instance, created, **kwargs):
+	if created:
+		Profile.objects.create(user=instance)
+
+
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+	instance.profile.save()
+
+then add this in the apps.py
+===================================
+	def ready(self):
+        import accounts.signals
+
+resicing img
+===========================
+def save(self):
+		super().save()
+		img = Image.open(self.image.path)
+		if img.height > 300 or img.width > 300:
+			output_sice = (300, 300)
+			img.thumbnail(output_sice)
+			img.save(self.image.path)
+
+
+pagination
+=================================
+in calse base views add paginate_by = any page number
+this is in the page u want to paginate
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+
+      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+       <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+       <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+
+       {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+       <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+
+      {% endif %}
+
+    {% endfor %}
+    {% if page_obj.has_next %}
+       <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+       <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+ {% endif %}

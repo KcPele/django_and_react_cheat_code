@@ -1,0 +1,78 @@
+npm init -y
+
+folders to have
+==============================
+-src
+   -components
+	-App.js
+   -index.js
+	import App from "./components/App";
+
+-templates
+    -frontend
+	 index.html
+-staic
+  -frontend
+
+
+
+npm i -D webpack webpack-cli 
+	@babel/core babel-loader @babel/preset-env
+	@babel/preset-react babel-plugin-transform-class-properties
+	react react-dom prop-types react-router-dom
+	
+	****just for styling***
+	@material-ui/core @material-ui/icons
+
+create a .babelrc or babel.config.json in the root dir
+====================================
+	{
+  		"presets": ["@babel/preset-env", "@babel/preset-react"],
+  		"plugins": ["transform-class-properties"]
+	}
+
+create a webpack.config.js
+==============================
+	module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      }
+    ]
+  },
+	optimization: {
+		minimize: true,
+	},
+};
+
+
+replace "test" in package.json with
+======================================
+"dev": "webpack --mode development --watch ./frontend/src/index.js --output-path ./frontend/static/frontend/main.js",
+"build": "webpack --mode production ./frontend/src/index.js --output-path ./frontend/static/frontend/main.js"
+  
+
+
+in index.html
+==================================
+<div id="app"></div>
+    {% load static %}
+<script src="{% static 'frontend/main.js/main.js' %}"></script>
+
+
+to compile
+========================
+npm run dev
+
+
+App.js
+==================
+its a class-base-component
+ReactDOM.render(<App />, document.getElementById("app"));
+
+django view will render the SPA(index.html) on home route
